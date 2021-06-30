@@ -1,6 +1,6 @@
 # MLProvLab
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/https:/https://github.com/fusion-jena/MLProvLab?urlpath=lab)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fusion-jena/MLProvLab/HEAD?urlpath=lab%2Ftree%2Fbinder%2Fevaluation_notebook.ipynb)
 
 Provenance tracking and visualisation of machine learning scripts
 
