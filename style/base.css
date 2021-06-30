@@ -1,0 +1,37 @@
+.prov-widget {
+    height: calc(100% - 60px);
+    width: 100%;
+}
+
+.prov-epoch-slider{
+    height: 30px;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.prov-cell-slider{
+    height: 30px;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.prov-info{
+    overflow: auto;
+}
+
+.prov-diff-widget {
+    height: calc(100% - 30px);
+    width: 100%;
+}
+
+.prov-diff-slider{
+    height: 30px;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}

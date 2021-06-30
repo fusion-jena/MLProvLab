@@ -1,0 +1,98 @@
+{
+  "name": "mlprovlab",
+  "version": "0.1.0",
+  "description": "Provenance tracking and visualisation of machine learning scripts",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension"
+  ],
+  "homepage": "https://github.com/fusion-jena/MLProvLab",
+  "bugs": {
+    "url": "https://github.com/fusion-jena/MLProvLab/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "Dominik Kerzel",
+    "email": "dominik.kerzel@uni-jena.de"
+  },
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "style/**/*.{css,.js,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "style": "style/index.css",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fusion-jena/MLProvLab.git"
+  },
+  "scripts": {
+    "build": "jlpm run build:lib && jlpm run build:labextension:dev",
+    "build:prod": "jlpm run build:lib && jlpm run build:labextension",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "build:lib": "tsc",
+    "clean": "jlpm run clean:lib",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:labextension": "rimraf mlprovlab/labextension",
+    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
+    "eslint": "eslint . --ext .ts,.tsx --fix",
+    "eslint:check": "eslint . --ext .ts,.tsx",
+    "install:extension": "jupyter labextension develop --overwrite .",
+    "prepare": "jlpm run clean && jlpm run build:prod",
+    "watch": "run-p watch:src watch:labextension",
+    "watch:src": "tsc -w",
+    "watch:labextension": "jupyter labextension watch ."
+  },
+  "dependencies": {
+    "@hookstate/core": "^3.0.7",
+    "@jupyterlab/application": "^3.0.7",
+    "@jupyterlab/apputils": "^3.0.5",
+    "@jupyterlab/coreutils": "^5.0.0",
+    "@jupyterlab/docregistry": "^3.0.8",
+    "@jupyterlab/notebook": "^3.0.8",
+    "@jupyterlab/services": "^6.0.5",
+    "@lumino/disposable": "^1.4.3",
+    "@lumino/widgets": "^1.19.0",
+    "cytoscape": "^3.18.2",
+    "cytoscape-cose-bilkent": "^4.1.0",
+    "cytoscape-cxtmenu": "^3.4.0",
+    "react": "^17.0.2",
+    "react-diff-viewer": "^3.1.1",
+    "react-syntax-highlighter": "^15.4.3"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^3.0.0",
+    "@types/cytoscape": "^3.14.12",
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "mkdirp": "^1.0.3",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.1.1",
+    "rimraf": "^3.0.2",
+    "typescript": "~4.1.3"
+  },
+  "sideEffects": [
+    "style/*.css",
+    "style/index.js"
+  ],
+  "styleModule": "style/index.js",
+  "jupyterlab": {
+    "discovery": {
+      "server": {
+        "managers": [
+          "pip"
+        ],
+        "base": {
+          "name": "mlprovlab"
+        }
+      }
+    },
+    "extension": true,
+    "outputDir": "mlprovlab/labextension"
+  }
+}
