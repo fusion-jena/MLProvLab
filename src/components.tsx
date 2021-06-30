@@ -112,8 +112,7 @@ export function ProvReactComponent(props: ProvReactComponentProps) {
   };
   const [toggleMenu, setToggleMenu] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState('');
-  //@ts-ignore
-  const slider = useHookstate(sliderValues);
+  const slider = useHookstate(sliderValues[props.notebook.id]);
 
   return (
     <div
@@ -144,19 +143,19 @@ export function ProvReactComponent(props: ProvReactComponentProps) {
               menuToggle={setToggleMenu}
             ></OptionMenuReact>
           ) : null}
-          {selectedMenu == 'Environment' && slider.value[props.notebook.id] ? (
+          {selectedMenu == 'Environment' && slider.value ? (
             <EnvironmentMenuReact
-              epoch={slider.value[props.notebook.id].epoch.value}
+              epoch={slider.value.epoch.value}
               notebook={props.notebook}
             ></EnvironmentMenuReact>
           ) : null}
-          {selectedMenu == 'Import' && slider.value[props.notebook.id] ? (
+          {selectedMenu == 'Import' && slider.value ? (
             <ImportMenuReact
-              epoch={slider.value[props.notebook.id].epoch.value}
+              epoch={slider.value.epoch.value}
               notebook={props.notebook}
             ></ImportMenuReact>
           ) : null}
-          {selectedMenu == 'General' && slider.value[props.notebook.id] ? (
+          {selectedMenu == 'General' && slider.value ? (
             <GeneralMenuReact notebook={props.notebook}></GeneralMenuReact>
           ) : null}
         </div>
@@ -253,6 +252,39 @@ export function ProvReactComponent(props: ProvReactComponentProps) {
       {prov ? null : (
         <div style={{ width: '100%', height: 'calc(100% - 90px)' }}></div>
       )}
+
+      <SliderComponent
+        notebook={props.notebook}
+        widget_id={props.widget_id}
+      ></SliderComponent>
+    </div>
+  );
+}
+
+interface SliderComponentProps {
+  widget_id: Array<CellData>;
+  notebook: NotebookPanel;
+}
+
+function SliderComponent(props: SliderComponentProps) {
+  //@ts-ignore
+  const prov: ProvenanceData =
+    props.notebook.context.model.metadata.toJSON()['provenance'];
+  const slider = useHookstate(sliderValues[props.notebook.id]);
+  const update = useHookstate(false);
+
+  useEffect(() => {
+    update.set(true);
+  }, [sliderValues[props.notebook.id]]);
+
+  useEffect(() => {
+    if (update.value) {
+      update.set(false);
+    }
+  }, [update]);
+
+  return (
+    <React.Fragment>
       {/** Epoch slider */}
       <div
         style={{
@@ -263,12 +295,11 @@ export function ProvReactComponent(props: ProvReactComponentProps) {
         }}
       >
         <div style={{ flexGrow: 0, paddingLeft: '10px', minWidth: '100px' }}>
-          {slider.value[props.notebook.id] ? (
+          {slider.value ? (
             <p style={{ height: '30px', lineHeight: '20px' }}>
               Epoch{' '}
               <b style={{ float: 'right' }}>
-                {slider.value[props.notebook.id].epoch.value}/
-                {slider.value[props.notebook.id].epoch.max}
+                {slider.value.epoch.value}/{slider.value.epoch.max}
               </b>
             </p>
           ) : null}
@@ -293,12 +324,9 @@ export function ProvReactComponent(props: ProvReactComponentProps) {
             minWidth: '200px'
           }}
         >
-          {slider.value[props.notebook.id] && prov ? (
+          {slider.value && prov ? (
             <p style={{ height: '30px', lineHeight: '20px' }}>
-              {
-                prov.epochs[slider.value[props.notebook.id].epoch.value]
-                  .environment.time
-              }
+              {prov.epochs[slider.value.epoch.value].environment.time}
             </p>
           ) : null}
         </div>
@@ -313,12 +341,11 @@ export function ProvReactComponent(props: ProvReactComponentProps) {
         }}
       >
         <div style={{ flexGrow: 0, paddingLeft: '10px', minWidth: '100px' }}>
-          {slider.value[props.notebook.id] ? (
+          {slider.value ? (
             <p style={{ height: '30px', lineHeight: '20px' }}>
               Execution{' '}
               <b style={{ float: 'right' }}>
-                {slider.value[props.notebook.id].cell.value}/
-                {slider.value[props.notebook.id].cell.max}
+                {slider.value.cell.value}/{slider.value.cell.max}
               </b>
             </p>
           ) : null}
@@ -343,18 +370,18 @@ export function ProvReactComponent(props: ProvReactComponentProps) {
             minWidth: '200px'
           }}
         >
-          {slider.value[props.notebook.id] && prov ? (
+          {slider.value && prov ? (
             <p style={{ height: '30px', lineHeight: '20px' }}>
               {
-                prov.epochs[slider.value[props.notebook.id].epoch.value].data[
-                  slider.value[props.notebook.id].cell.value
+                prov.epochs[slider.value.epoch.value].data[
+                  slider.value.cell.value
                 ].time
               }
             </p>
           ) : null}
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 
