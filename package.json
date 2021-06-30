@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/fusion-jena/MLProvLab/issues"
   },
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "author": {
     "name": "Dominik Kerzel",
     "email": "dominik.kerzel@uni-jena.de"
