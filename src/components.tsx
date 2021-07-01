@@ -9,6 +9,8 @@ import { download, exportProvenance } from './functions';
 
 import { JupyterFrontEnd } from '@jupyterlab/application';
 
+import { OutputAreaModel, SimplifiedOutputArea } from '@jupyterlab/outputarea';
+
 //@ts-ignore
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
@@ -21,6 +23,7 @@ import { useHookstate } from '@hookstate/core';
 import {
   displayedExecutions,
   renderImports,
+  rendermimeInstanceGet,
   showLastExecute,
   sliderValues,
   zoomOnSelect
@@ -246,12 +249,9 @@ export function ProvReactComponent(props: ProvReactComponentProps) {
       </div>
       {/** Cytoscape container */}
       <div
-        style={{ width: '100%', height: prov ? 'calc(100% - 90px)' : '0px' }}
+        style={{ width: '100%', height: 'calc(100% - 90px)' }}
         id={'cytoscape-' + props.widget_id}
       ></div>
-      {prov ? null : (
-        <div style={{ width: '100%', height: 'calc(100% - 90px)' }}></div>
-      )}
 
       <SliderComponent
         notebook={props.notebook}
@@ -271,17 +271,6 @@ function SliderComponent(props: SliderComponentProps) {
   const prov: ProvenanceData =
     props.notebook.context.model.metadata.toJSON()['provenance'];
   const slider = useHookstate(sliderValues[props.notebook.id]);
-  const update = useHookstate(false);
-
-  useEffect(() => {
-    update.set(true);
-  }, [sliderValues[props.notebook.id]]);
-
-  useEffect(() => {
-    if (update.value) {
-      update.set(false);
-    }
-  }, [update]);
 
   return (
     <React.Fragment>
@@ -865,6 +854,7 @@ export function NotebookReactComponent(props: NotebookComponentReactProps) {
   const localDisplayedExecutions = useHookstate(
     displayedExecutions[props.notebookPanel.id]
   );
+  const [outputRenders, outputRendersSet] = useState([]);
 
   useEffect(() => {
     //@ts-ignore
@@ -874,6 +864,7 @@ export function NotebookReactComponent(props: NotebookComponentReactProps) {
     var epoch = data.epochs[localSliderValues.get().epoch.value];
 
     var list: Array<any> = [];
+    var outputList: Array<any> = [];
 
     if (Array.isArray(localDisplayedExecutions.get())) {
       localDisplayedExecutions.get().forEach((element: any) => {
@@ -888,11 +879,23 @@ export function NotebookReactComponent(props: NotebookComponentReactProps) {
               source: cell.cell_source.toString(),
               execution: element
             });
+
+            if (cell.cell_outputs.length != 0) {
+              let output = new SimplifiedOutputArea({
+                model: new OutputAreaModel({ values: cell.cell_outputs }),
+                rendermime: rendermimeInstanceGet()
+              }).node.outerHTML;
+              outputList.push(output);
+            } else {
+              outputList.push(null);
+            }
+
             break;
           }
         }
       });
       setCodes(list);
+      outputRendersSet(outputList);
     }
 
     //@ts-ignore
@@ -928,6 +931,9 @@ export function NotebookReactComponent(props: NotebookComponentReactProps) {
             >
               {el.source}
             </SyntaxHighlighter>
+            {outputRenders[i] ? (
+              <div dangerouslySetInnerHTML={{__html: outputRenders[i]}}></div>
+            ) : null}
           </React.Fragment>
         );
       })}

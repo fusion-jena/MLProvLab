@@ -40,3 +40,19 @@ export function cyInstancesGet(): Dictionary<any> {
 export function cyInstancesSet(input: any): void {
   cyInstances = input;
 }
+
+var rendermimeInstance = {};
+
+/**
+ * Set cytoscape instances
+ */
+export function rendermimeInstanceGet(): any {
+  return rendermimeInstance;
+}
+
+/**
+ * Get cytoscape instances
+ */
+export function rendermimeInstanceSet(input: any): void {
+  rendermimeInstance = input;
+}

@@ -275,16 +275,14 @@ export function InitialRender(
       provenance.epochs[provenance.epochs.length - 1].data.length - 1
     ).toString();
 
-    sliderValues.merge({
-      [nbPanel.id]: {
-        epoch: {
-          max: provenance.epochs.length - 1,
-          value: provenance.epochs.length - 1
-        },
-        cell: {
-          max: provenance.epochs[provenance.epochs.length - 1].data.length - 1,
-          value: provenance.epochs[provenance.epochs.length - 1].data.length - 1
-        }
+    sliderValues[nbPanel.id].set({
+      epoch: {
+        max: provenance.epochs.length - 1,
+        value: provenance.epochs.length - 1
+      },
+      cell: {
+        max: provenance.epochs[provenance.epochs.length - 1].data.length - 1,
+        value: provenance.epochs[provenance.epochs.length - 1].data.length - 1
       }
     });
 
@@ -314,23 +312,23 @@ export function EpochChangeRender(
   nbPanel: NotebookPanel
 ) {
   if (provenance) {
-    slider_cell.max = ( //@ts-ignore
+    slider_cell.max = //@ts-ignore
+    (
       provenance.epochs[parseInt(slider_epoch.value)].data.length - 1
     ).toString();
-    slider_cell.value = ( //@ts-ignore
+    slider_cell.value = //@ts-ignore
+    (
       provenance.epochs[parseInt(slider_epoch.value)].data.length - 1
     ).toString();
 
-    sliderValues.merge({
-      [nbPanel.id]: {
-        epoch: {
-          max: parseInt(slider_epoch.max),
-          value: parseInt(slider_epoch.value)
-        },
-        cell: {
-          max: provenance.epochs[parseInt(slider_epoch.value)].data.length - 1,
-          value: provenance.epochs[parseInt(slider_epoch.value)].data.length - 1
-        }
+    sliderValues[nbPanel.id].set({
+      epoch: {
+        max: parseInt(slider_epoch.max),
+        value: parseInt(slider_epoch.value)
+      },
+      cell: {
+        max: provenance.epochs[parseInt(slider_epoch.value)].data.length - 1,
+        value: provenance.epochs[parseInt(slider_epoch.value)].data.length - 1
       }
     });
 
@@ -360,16 +358,14 @@ export function CellChangeRender(
   nbPanel: NotebookPanel
 ) {
   if (provenance) {
-    sliderValues.merge({
-      [nbPanel.id]: {
-        epoch: {
-          max: parseInt(slider_epoch.max),
-          value: parseInt(slider_epoch.value)
-        },
-        cell: {
-          max: parseInt(slider_cell.max),
-          value: parseInt(slider_cell.value)
-        }
+    sliderValues[nbPanel.id].set({
+      epoch: {
+        max: parseInt(slider_epoch.max),
+        value: parseInt(slider_epoch.value)
+      },
+      cell: {
+        max: parseInt(slider_cell.max),
+        value: parseInt(slider_cell.value)
       }
     });
 

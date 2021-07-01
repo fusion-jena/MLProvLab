@@ -52,7 +52,13 @@ import {
   NotebookReactComponent
 } from './components';
 
-import { cyInstancesGet, cyInstancesSet, zoomOnSelect } from './states';
+import {
+  cyInstancesGet,
+  cyInstancesSet,
+  rendermimeInstanceSet,
+  sliderValues,
+  zoomOnSelect
+} from './states';
 
 class ButtonExtension
   implements DocumentRegistry.IWidgetExtension<NotebookPanel, INotebookModel>
@@ -144,6 +150,8 @@ const extension: JupyterFrontEndPlugin<void> = {
     rendermime: IRenderMimeRegistry
   ) => {
     app.docRegistry.addWidgetExtension('Notebook', new ButtonExtension(app));
+
+    rendermimeInstanceSet(rendermime);
 
     var counter = 0;
     var lock = 0;
@@ -412,17 +420,19 @@ const extension: JupyterFrontEndPlugin<void> = {
       };
 
       const focusNode = async function focusNodeFunc(_: any, cell: Cell) {
-        var cellData = cell.model.metadata.toJSON();
-        var cy: cytoscape.Core = cyInstancesGet()[nbPanel.context.path];
-        if (cellData['prov_id'] && cy) {
-          try {
-            cy.$(':selected').forEach(el => {
-              el.unselect();
-            });
-            var node = cy.$(`node[id="${cellData['prov_id']}"]`)[0];
-            node.select();
-            if (zoomOnSelect.value) cy.fit(node, 200);
-          } catch (error) {}
+        if (typeof cell != 'undefined') {
+          var cellData = cell.model.metadata.toJSON();
+          var cy: cytoscape.Core = cyInstancesGet()[nbPanel.context.path];
+          if (cellData['prov_id'] && cy) {
+            try {
+              cy.$(':selected').forEach(el => {
+                el.unselect();
+              });
+              var node = cy.$(`node[id="${cellData['prov_id']}"]`)[0];
+              node.select();
+              if (zoomOnSelect.value) cy.fit(node, 200);
+            } catch (error) {}
+          }
         }
       };
       nbPanel.content.activeCellChanged.connect(focusNode);
@@ -512,6 +522,30 @@ const extension: JupyterFrontEndPlugin<void> = {
         if (!widget || widget.isDisposed) {
           // Create a new widget if one does not exist
           // or if the previous one was disposed after closing the panel
+
+          //@ts-ignore
+          let prov: ProvenanceData =
+            notebookPanel.context.model.metadata.toJSON()['provenance'];
+
+          // This need to be called before the prov component is created so the sliders and values of them are displayed properly
+          if (typeof prov != 'undefined') {
+            sliderValues[notebookPanel.id].set({
+              epoch: {
+                max: prov.epochs.length == 0 ? prov.epochs.length - 1 : 0,
+                value: prov.epochs.length == 0 ? prov.epochs.length - 1 : 0
+              },
+              cell: {
+                max:
+                  prov.epochs.length == 0
+                    ? prov.epochs[prov.epochs.length - 1].data.length - 1
+                    : 0,
+                value:
+                  prov.epochs.length == 0
+                    ? prov.epochs[prov.epochs.length - 1].data.length - 1
+                    : 0
+              }
+            });
+          }
 
           const content = ReactWidget.create(
             <ProvReactComponent
