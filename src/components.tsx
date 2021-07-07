@@ -24,6 +24,7 @@ import {
   displayedExecutions,
   renderImports,
   rendermimeInstanceGet,
+  renderOnUpdate,
   showLastExecute,
   sliderValues,
   zoomOnSelect
@@ -696,6 +697,22 @@ export function OptionMenuReact(props: OptionMenuReactProps) {
           style={{
             width: '100%',
             padding: '10px',
+            borderBottom: '1px solid grey',
+            boxSizing: 'border-box'
+          }}
+        >
+          <input
+            style={{ marginRight: '10px' }}
+            type={'checkbox'}
+            defaultChecked={renderOnUpdate.value}
+            onChange={ev => renderOnUpdate.set(ev.target.checked)}
+          ></input>
+          <label>Rebuild the graph automatically if new data is captured</label>
+        </div>
+        <div
+          style={{
+            width: '100%',
+            padding: '10px',
             boxSizing: 'border-box'
           }}
           onClick={() => {
@@ -932,7 +949,7 @@ export function NotebookReactComponent(props: NotebookComponentReactProps) {
               {el.source}
             </SyntaxHighlighter>
             {outputRenders[i] ? (
-              <div dangerouslySetInnerHTML={{__html: outputRenders[i]}}></div>
+              <div dangerouslySetInnerHTML={{ __html: outputRenders[i] }}></div>
             ) : null}
           </React.Fragment>
         );

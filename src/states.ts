@@ -2,6 +2,11 @@ import { createState } from '@hookstate/core';
 import { Dictionary } from './interfaces';
 
 /**
+ * An option for render the graph every time the provenance data is updated
+ */
+export const renderOnUpdate = createState(false);
+
+/**
  * State for render imports option
  */
 export const renderImports = createState(false);

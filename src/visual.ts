@@ -9,6 +9,7 @@ import { CellData, ProvenanceData } from './interfaces';
 import {
   displayedExecutions,
   renderImports,
+  renderOnUpdate,
   showLastExecute,
   sliderValues
 } from './states';
@@ -262,37 +263,57 @@ export function InitialRender(
   slider_cell: HTMLInputElement,
   provenance: ProvenanceData,
   cy: cytoscape.Core,
-  nbPanel: NotebookPanel
+  nbPanel: NotebookPanel,
+  force = false
 ) {
   if (provenance) {
-    slider_epoch.max = (provenance.epochs.length - 1).toString();
-    slider_epoch.value = (provenance.epochs.length - 1).toString();
+    if (force || renderOnUpdate.get()) {
+      slider_epoch.max = (provenance.epochs.length - 1).toString();
+      slider_epoch.value = (provenance.epochs.length - 1).toString();
 
-    slider_cell.max = (
-      provenance.epochs[provenance.epochs.length - 1].data.length - 1
-    ).toString();
-    slider_cell.value = (
-      provenance.epochs[provenance.epochs.length - 1].data.length - 1
-    ).toString();
+      slider_cell.max = (
+        provenance.epochs[provenance.epochs.length - 1].data.length - 1
+      ).toString();
+      slider_cell.value = (
+        provenance.epochs[provenance.epochs.length - 1].data.length - 1
+      ).toString();
 
-    sliderValues[nbPanel.id].set({
-      epoch: {
-        max: provenance.epochs.length - 1,
-        value: provenance.epochs.length - 1
-      },
-      cell: {
-        max: provenance.epochs[provenance.epochs.length - 1].data.length - 1,
-        value: provenance.epochs[provenance.epochs.length - 1].data.length - 1
-      }
-    });
+      sliderValues[nbPanel.id].set({
+        epoch: {
+          max: provenance.epochs.length - 1,
+          value: provenance.epochs.length - 1
+        },
+        cell: {
+          max: provenance.epochs[provenance.epochs.length - 1].data.length - 1,
+          value: provenance.epochs[provenance.epochs.length - 1].data.length - 1
+        }
+      });
 
-    RenderCytoscape(
-      cy,
-      provenance.epochs.length - 1,
-      provenance.epochs[provenance.epochs.length - 1].data.length - 1,
-      provenance,
-      nbPanel
-    );
+      RenderCytoscape(
+        cy,
+        provenance.epochs.length - 1,
+        provenance.epochs[provenance.epochs.length - 1].data.length - 1,
+        provenance,
+        nbPanel
+      );
+    } else {
+      slider_epoch.max = (provenance.epochs.length - 1).toString();
+
+      slider_cell.max = (
+        provenance.epochs[provenance.epochs.length - 1].data.length - 1
+      ).toString();
+
+      sliderValues[nbPanel.id].set({
+        epoch: {
+          max: provenance.epochs.length - 1,
+          value: slider_epoch.value
+        },
+        cell: {
+          max: provenance.epochs[provenance.epochs.length - 1].data.length - 1,
+          value: slider_cell.value
+        }
+      });
+    }
   }
 }
 

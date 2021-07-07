@@ -634,7 +634,8 @@ const extension: JupyterFrontEndPlugin<void> = {
                   cell_slider,
                   args.newValue,
                   cy,
-                  notebookPanel
+                  notebookPanel,
+                  true
                 );
               } else if (
                 args.key === 'provenance' &&
