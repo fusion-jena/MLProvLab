@@ -309,7 +309,7 @@ export function InitialRender(
           value: slider_epoch.value
         },
         cell: {
-          max: provenance.epochs[provenance.epochs.length - 1].data.length - 1,
+          max: provenance.epochs[parseInt(slider_epoch.value)].data.length - 1,
           value: slider_cell.value
         }
       });
