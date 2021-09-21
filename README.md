@@ -2,12 +2,11 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fusion-jena/MLProvLab/HEAD?urlpath=lab%2Ftree%2Fbinder%2Fevaluation_notebook.ipynb)
 
-Provenance tracking and visualisation of machine learning scripts
+MLProvLab: Provenance Management for Data Science Notebooks
 
 MLProvLab is a JupyterLab extension to track, manage, compare, and visualize the provenance of machine learning notebooks.
-The tool is designed to help data scientists and ML practitioners to automatically identify the relationships between data and models in ML scripts.
-It efficiently and automatically tracks the provenance metadata, including datasets and modules used.
-It provides users the facility to compare different runs of ML experiments, thereby ensuring a way to help them make their decisions.
+It can track, at runtime, the datasets, variables, libraries, and functions used in the notebook and their dependencies between cells.
+It provides users the facility to compare different runs of computational experiments, thereby ensuring a way to help them make their decisions.
 The tool helps researchers and data scientists to collect more information on their experimentation and interact with them.
 
 This extension is composed of a Python package named `mlprovlab` for the server extension and a NPM package named `mlprovlab`
