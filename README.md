@@ -12,6 +12,9 @@ The tool helps researchers and data scientists to collect more information on th
 This extension is composed of a Python package named `mlprovlab` for the server extension and a NPM package named `mlprovlab`
 for the frontend extension.
 
+### Publication
+[Towards Tracking Provenance from Machine Learning Notebooks](https://doi.org/10.5220/0010681400003064), 
+Dominik Kerzel, Sheeba Samuel, Birgitta König-Ries. KDIR 2021
 
 ## Requirements
 
@@ -84,3 +87,4 @@ jupyter lab build --minimize=False
 ```bash
 pip uninstall mlprovlab
 ```
+
